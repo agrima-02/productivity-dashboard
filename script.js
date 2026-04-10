@@ -1,102 +1,172 @@
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let user = localStorage.getItem("user");
 
-function saveTasks(){
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+function login(){
+  user=username.value;
+  localStorage.setItem("user",user);
+  init();
 }
 
-function addTask(){
-    let text = document.getElementById("taskInput").value;
-    let priority = document.getElementById("priority").value;
-    let date = document.getElementById("dueDate").value;
-    
-    if(text===""){
-        alert("Enter a task");
-        return;
-    }
+function init(){
+  if(user){
+    loginBox.style.display="none";
+    welcome.innerText="Hello "+user;
+  }
+}
+init();
 
-    let task={
-        id:Date.now(),
-        name:text,
-        priority:priority,
-        date:date,
-        status:"todo"
-    };
-    
-    tasks.push(task);
-    saveTasks();
-    displayTasks();
-    document.getElementById("taskInput").value="";
+let tasks=JSON.parse(localStorage.getItem("tasks"))||[];
+let boards=JSON.parse(localStorage.getItem("boards"))||["Default"];
+let editId=null,undo=null;
+
+function addBoard(){
+  let name=prompt("Board name");
+  boards.push(name);
+  localStorage.setItem("boards",JSON.stringify(boards));
+  loadBoards();
 }
 
-function displayTasks(){
+function loadBoards(){
+  boardSelect.innerHTML="";
+  boards.forEach(b=>{
+    boardSelect.innerHTML+=`<option>${b}</option>`;
+  });
+}
+loadBoards();
 
-    document.querySelectorAll(".taskList").forEach(list=>{
-        list.innerHTML="";
-    });
-    
-    let search=document.getElementById("searchInput").value.toLowerCase();
-    let filter=document.getElementById("filterPriority").value;
-    
-    tasks.forEach(task=>{
-    
-        if(task.name.toLowerCase().includes(search)){
-        
-            if(filter==="All" || task.priority===filter){
-            
-                let div=document.createElement("div");
-                div.className="task";
-                div.draggable=true;
-                div.id=task.id;
-                
-                div.ondragstart=drag;
-                
-                div.innerHTML=
-                "<b>"+task.name+"</b><br>"+
-                "Priority: "+task.priority+"<br>"+
-                "Due: "+task.date+"<br>"+
-                "<button class='deleteButton' onclick='deleteTask("+task.id+")'>Delete</button>";
-                
-                document.querySelector("#"+task.status+" .taskList").appendChild(div);
-            
-            }
-        
+function openForm(){form.style.display="block";}
+function closeForm(){form.style.display="none";}
+
+function saveTask(){
+  let t={
+    id:editId||Date.now(),
+    title:title.value,
+    priority:priority.value,
+    dueDate:dueDate.value,
+    status:"todo",
+    board:boardSelect.value,
+    tags:tags.value.split(","),
+    important:false
+  };
+
+  if(editId){
+    let i=tasks.findIndex(x=>x.id===editId);
+    t.status=tasks[i].status;
+    t.important=tasks[i].important;
+    tasks[i]=t;
+    editId=null;
+  } else tasks.push(t);
+
+  localStorage.setItem("tasks",JSON.stringify(tasks));
+  renderTasks();
+  closeForm();
+}
+
+function renderTasks(){
+  document.querySelectorAll(".column div").forEach(c=>c.innerHTML="");
+
+  let searchVal=search.value.toLowerCase();
+  let filter=filterPriority.value;
+  let board=boardSelect.value;
+
+  let done=0,over=0;
+
+  tasks.forEach(t=>{
+    if(t.board!==board) return;
+
+    if(t.title.toLowerCase().includes(searchVal)){
+      if(filter==="all"||t.priority===filter){
+
+        let div=document.createElement("div");
+        div.className="task "+t.priority;
+
+        if(t.important) div.classList.add("important");
+
+        if(new Date(t.dueDate)<new Date() && t.status!=="done"){
+          div.style.border="2px solid red"; over++;
         }
-    
-    });
 
+        if(t.status==="done") done++;
+
+        // highlight
+        let titleText=t.title.replace(
+          new RegExp(searchVal,"gi"),
+          match=>`<span class="highlight">${match}</span>`
+        );
+
+        div.innerHTML=`
+        ${titleText}<br>
+        ${t.tags.join(",")}<br>
+        <button onclick="toggleImportant(${t.id})">⭐</button>
+        <button onclick="editTask(${t.id})">Edit</button>
+        <button onclick="delTask(${t.id})">Delete</button>
+        `;
+
+        div.draggable=true;
+        div.id=t.id;
+        div.ondragstart=drag;
+
+        document.querySelector(`#${t.status} div`).appendChild(div);
+      }
+    }
+  });
+
+  insights.innerText=`Done: ${done} | Overdue: ${over} | Total: ${tasks.length}`;
+
+  drawChart(done,tasks.length);
 }
 
-function deleteTask(id){
-
-    tasks = tasks.filter(task => task.id !== id);
-    saveTasks();
-    displayTasks();
+function editTask(id){
+  let t=tasks.find(x=>x.id===id);
+  editId=id;
+  title.value=t.title;
+  priority.value=t.priority;
+  dueDate.value=t.dueDate;
+  tags.value=t.tags.join(",");
+  openForm();
 }
 
-function allowDrop(ev){
-    ev.preventDefault();
+function delTask(id){
+  undo=tasks.find(x=>x.id===id);
+  tasks=tasks.filter(x=>x.id!==id);
+  renderTasks();
+
+  setTimeout(()=>undo=null,5000);
+
+  if(confirm("Undo delete?")){
+    tasks.push(undo);
+  }
+
+  localStorage.setItem("tasks",JSON.stringify(tasks));
 }
 
-function drag(ev){
-    ev.dataTransfer.setData("text", ev.target.id);
+function toggleImportant(id){
+  let t=tasks.find(x=>x.id===id);
+  t.important=!t.important;
+  localStorage.setItem("tasks",JSON.stringify(tasks));
+  renderTasks();
 }
 
-function drop(ev){
-    ev.preventDefault();
-    
-    let id=ev.dataTransfer.getData("text");
-    
-    let column=ev.currentTarget.id;
-    
-    let task=tasks.find(t=>t.id==id);
-    
-    task.status=column;
-    
-    saveTasks();
-    displayTasks();
+function allowDrop(e){e.preventDefault();}
+function drag(e){e.dataTransfer.setData("text",e.target.id);}
+function drop(e){
+  let id=e.dataTransfer.getData("text");
+  let t=tasks.find(x=>x.id==id);
+  t.status=e.currentTarget.id;
+  localStorage.setItem("tasks",JSON.stringify(tasks));
+  renderTasks();
 }
 
-document.getElementById("searchInput").addEventListener("input",displayTasks);
-document.getElementById("filterPriority").addEventListener("change",displayTasks);
+function drawChart(done,total){
+  let ctx=chart.getContext("2d");
+  ctx.clearRect(0,0,400,200);
 
-displayTasks();
+  let percent=done/(total||1);
+
+  ctx.fillRect(50,100,300*percent,30);
+  ctx.fillRect(50+300*percent,100,300*(1-percent),30);
+}
+
+search.addEventListener("input",renderTasks);
+filterPriority.addEventListener("change",renderTasks);
+
+renderTasks();
