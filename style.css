@@ -1,81 +1,88 @@
-body {
-    font-family: Arial;
-    text-align: center;
-    background: #f4f6f9;
+body{
+    font-family:"Times New Roman", serif;
+    background:linear-gradient(to right,#fde6f2,#f3e8ff);
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
 }
 
-.board {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+.container{
+    background:white;
+    padding:25px;
+    border-radius:25px;
+    width:85%;
+    max-width:1000px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
 
-.column {
-    background: white;
-    width: 30%;
-    padding: 10px;
-    border-radius: 10px;
-    min-height: 300px;
+h1{
+    text-align:center;
+    color:#7c3aed;
 }
 
-.task {
-    padding: 10px;
-    margin: 10px;
-    border-radius: 6px;
-    cursor: grab;
-    text-align: left;
+h2{
+    color:#a855f7;
 }
 
-.High {
-    background: #ffcccc;
+.box{
+    background:#f9e6ff;
+    padding:15px;
+    margin:15px 0;
+    border-radius:20px;
 }
 
-.Medium {
-    background: #fff0b3;
+input,select,button{
+    padding:8px;
+    margin:5px;
+    border:none;
+    border-radius:10px;
+    font-family:"Times New Roman", serif;
 }
 
-.Low {
-    background: #ccffcc;
+input,select{
+    background:white;
 }
 
-.important {
-    border: 3px solid gold;
+button{
+    background:#d8b4fe;
+    cursor:pointer;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+button:hover{
+    background:#c084fc;
 }
 
-.box {
-    background: white;
-    margin: 100px auto;
-    padding: 20px;
-    width: 300px;
-    border-radius: 10px;
+.board{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:15px;
 }
 
-.controls {
-    margin: 15px;
+.column{
+    background:#f3e8ff;
+    flex:1;
+    padding:10px;
+    border-radius:20px;
+    min-height:250px;
 }
 
-.controls input,
-.controls select,
-.controls button {
-    padding: 8px;
-    margin: 5px;
+.task{
+    background:white;
+    padding:10px;
+    margin:10px 0;
+    border-radius:12px;
+    cursor:grab;
+    box-shadow:0 2px 5px rgba(0,0,0,0.05);
 }
 
-#insights {
-    margin: 15px;
-    font-weight: bold;
+.deleteButton{
+    margin-top:5px;
+    background:#f9a8d4;
 }
 
-#chart {
-    margin-top: 20px;
+.deleteButton:hover{
+    background:#f472b6;
 }
