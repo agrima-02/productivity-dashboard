@@ -1,67 +1,130 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Productivity Dashboard</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    
-    <body>
-        <div class="container">
-        
-            <h1>Productivity Dashboard</h1>
+<head>
+    <title>Productivity Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-            <div class="box">
-                <h2>Add Task</h2>
-                
-                <input type="text" id="taskInput" placeholder="Enter task">
-                
-                <select id="priority">
-                    <option value="High">High Priority</option>
-                    <option value="Medium">Medium Priority</option>
-                    <option value="Low">Low Priority</option>
-                </select>
-                
-                <input type="date" id="dueDate">
-                
-                <button onclick="addTask()">Add Task</button>
-            </div>
+<body>
 
-            <div class="box">
-                <h2>Search & Filter</h2>
-                
-                <input type="text" id="searchInput" placeholder="Search tasks">
-                
-                <select id="filterPriority">
-                    <option value="All">All Priorities</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                </select>
-            
-            </div>
+<div id="loginPage" class="box">
+    <h2>Login</h2>
 
-            <div class="board">
-            
-                <div class="column" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <h3>To Do</h3>
-                    <div class="taskList"></div>
-                </div>
-                
-                <div class="column" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <h3>In Progress</h3>
-                    <div class="taskList"></div>
-                </div>
-                
-                <div class="column" id="done" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <h3>Done</h3>
-                    <div class="taskList"></div>
-                </div>
-            
-            </div>
-        
+    <input type="text" id="loginUser" placeholder="Username">
+
+    <div style="position:relative;">
+        <input type="password" id="loginPass" placeholder="Password" style="width:90%;">
+        <span onclick="togglePassword()" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">👁</span>
+    </div>
+
+    <div>
+        <label><input type="checkbox" id="rememberMe"> Remember Me</label>
+    </div>
+
+    <button onclick="login()">Login</button>
+    <p id="loginError"></p>
+</div>
+
+<div id="dashboard" style="display:none;">
+
+<div class="container">
+
+<div class="topBar">
+    <button onclick="toggleTheme()" class="topBtn">🌙</button>
+    <button onclick="setTheme('')" class="topBtn">💜</button>
+    <button onclick="setTheme('theme2')" class="topBtn">💙</button>
+    <button onclick="setTheme('theme3')" class="topBtn">💛</button>
+    <button onclick="setTheme('theme4')" class="topBtn">💚</button>
+    <button onclick="logout()" class="topBtn">Logout</button>
+</div>
+
+<h1>Productivity Dashboard</h1>
+<div class="box" id="pinnedSection" style="display:none;">
+    <h2>Pinned Tasks ⭐</h2>
+    <div id="pinnedTasks"></div>
+</div>
+
+<div class="box">
+    <h2>Daily Goals</h2>
+    <p>Water: <span id="waterGoalStatus"></span></p>
+    <p>Steps: <span id="stepsGoalStatus"></span></p>
+</div>
+
+<div class="box">
+    <h2>Add Task</h2>
+    <input type="text" id="taskInput" placeholder="Enter task">
+    <select id="priority">
+        <option value="High">High Priority</option>
+        <option value="Medium">Medium Priority</option>
+        <option value="Low">Low Priority</option>
+    </select>
+    <input type="date" id="dueDate">
+    <button onclick="addTask()">Add Task</button>
+</div>
+
+<div class="box">
+    <h2>Search & Filter</h2>
+    <input type="text" id="searchInput" placeholder="Search tasks">
+    <select id="filterPriority">
+        <option value="All">All</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+    </select>
+    <select id="sortDate">
+        <option value="none">Sort Date</option>
+        <option value="asc">Earliest</option>
+        <option value="desc">Latest</option>
+    </select>
+</div>
+
+<div class="box">
+    <h2>Progress</h2>
+    <p id="statsText"></p>
+    <div class="progressOuter"><div id="progressBar"></div></div>
+</div>
+
+<div class="board">
+    <div class="column" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h3>To Do</h3><div class="taskList"></div>
+    </div>
+
+    <div class="column" id="progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h3>In Progress</h3><div class="taskList"></div>
+    </div>
+
+    <div class="column" id="done" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h3>Done</h3><div class="taskList"></div>
+    </div>
+</div>
+
+<div class="box">
+    <h2>Health Tracker</h2>
+
+    <div class="healthRow">
+
+        <div class="trackerCard">
+            <h3>Water 💧</h3>
+            <p id="waterCount">0 glasses</p>
+            <button onclick="addWater()">+1</button>
+            <button onclick="removeWater()">-1</button>
+            <div id="waterHistory"></div>
         </div>
-        
-        <script src="script.js"></script>
-    
-    </body>
+
+        <div class="trackerCard">
+            <h3>Steps 🚶</h3>
+            <input type="number" id="stepsInput" placeholder="Enter steps">
+            <button onclick="addSteps()">Save</button>
+            <p id="todaySteps">0</p>
+            <div id="stepsHistory"></div>
+        </div>
+
+    </div>
+</div>
+
+</div>
+</div>
+
+<script src="script.js"></script>
+</body>
 </html>
