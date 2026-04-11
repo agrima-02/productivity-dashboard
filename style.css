@@ -1,19 +1,20 @@
 body{
     font-family:"Times New Roman", serif;
-    background: #fde6f2;
+    background:#fde6f2;
     margin:0;
     display:flex;
     justify-content:center;
-    align-items:center;
+    align-items:flex-start;
+    padding:20px 0;
     min-height:100vh;
 }
 
 .container{
     background:white;
-    padding:25px;
+    padding:30px;
     border-radius:25px;
-    width:85%;
-    max-width:1000px;
+    width:96%;
+    max-width:1350px;
     box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
 
@@ -31,6 +32,11 @@ h2{
     padding:15px;
     margin:15px 0;
     border-radius:20px;
+    transition:0.2s;
+}
+
+.box:hover{
+    transform:translateY(-2px);
 }
 
 input,select,button{
@@ -38,11 +44,10 @@ input,select,button{
     margin:5px;
     border:none;
     border-radius:10px;
-    font-family:"Times New Roman", serif;
 }
 
 input,select{
-    background:white;
+    background:#f3e8ff;
 }
 
 button{
@@ -56,9 +61,8 @@ button:hover{
 
 .board{
     display:flex;
-    justify-content:space-between;
     gap:10px;
-    margin-top:15px;
+    margin-top:10px;
 }
 
 .column{
@@ -74,15 +78,219 @@ button:hover{
     padding:10px;
     margin:10px 0;
     border-radius:12px;
-    cursor:grab;
-    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+    transition:0.2s;
+}
+
+.task:hover{
+    transform:scale(1.02);
 }
 
 .deleteButton{
-    margin-top:5px;
     background:#f9a8d4;
 }
 
-.deleteButton:hover{
-    background:#f472b6;
+.healthRow{
+    display:flex;
+    gap:15px;
+}
+
+.trackerCard{
+    flex:1;
+    background:white;
+    padding:15px;
+    border-radius:15px;
+}
+
+#loginPage{
+    width:340px;
+    margin:120px auto;
+    padding:35px 30px;
+    background:#f9e6ff;
+    border-radius:25px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+#loginPage input{
+    width:90%;
+}
+
+#loginError{
+    color:red;
+    font-size:14px;
+    margin-top:8px;
+}
+
+.topBar{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.topBtn{
+    background:#e9d5ff;
+    padding:6px 12px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+}
+
+.topBtn:hover{
+    background:#d8b4fe;
+}
+
+.progressOuter{
+    width:100%;
+    height:20px;
+    background:#eee;
+    border-radius:10px;
+}
+
+#progressBar{
+    height:100%;
+    width:0%;
+    background:#c084fc;
+    border-radius:10px;
+    text-align:center;
+    font-size:12px;
+}
+
+body.dark{
+    background:#2a2438;
+}
+
+body.dark .container{
+    background:#352f44;
+}
+
+body.dark .box{
+    background:#3f3b57;
+}
+
+body.dark .column{
+    background:#4c4763;
+}
+
+body.dark .task{
+    background:#5b5675;
+    color:#f3f4f6;
+}
+
+body.dark .trackerCard{
+    background:#4c4763;
+}
+
+body.dark input,
+body.dark select{
+    background:#6b6285;
+    color:#ffffff;
+}
+
+body.dark input::placeholder{
+    color:#d1c4e9;
+}
+
+.pinBtn{
+    background:#fde68a;
+}
+
+.editBtn{
+    background:#bfdbfe;
+}
+
+@media(max-width:768px){
+    .board{
+        flex-direction:column;
+    }
+    .healthRow{
+        flex-direction:column;
+    }
+}
+
+body.theme2{background:#e0f2fe;}
+body.theme3{background:#fef9c3;}
+body.theme4{background:#dcfce7;}
+
+input:focus,
+select:focus{
+    outline:none;
+    box-shadow:0 0 0 2px #c084fc;
+}
+
+#loginPage label{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+    color:#6b21a8;
+}
+
+#loginPage input[type="checkbox"]{
+    appearance:none;
+    width:18px;
+    height:18px;
+    border-radius:6px;
+    border:2px solid #c084fc;
+    background:white;
+    cursor:pointer;
+    position:relative;
+    transition:0.15s;
+}
+
+#loginPage input[type="checkbox"]:checked{
+    background:#c084fc;
+}
+
+#loginPage input[type="checkbox"]:checked::after{
+    content:"✓";
+    position:absolute;
+    color:white;
+    font-size:12px;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-55%);
+}
+
+#loginPage input[type="checkbox"]:hover{
+    transform:scale(1.05);
+}
+
+body.dark #loginPage input[type="checkbox"]{
+    background:#4c4763;
+    border-color:#a78bfa;
+}
+
+body.dark #loginPage input[type="checkbox"]:checked{
+    background:#a78bfa;
+}
+
+#pinnedSection{
+    background:#f3e8ff;
+}
+
+#pinnedTasks{
+    margin-top:10px;
+}
+
+#pinnedTasks .task{
+    border-left:5px solid #c084fc;
+    margin:8px 0;
+}
+
+.unpinBtn{
+    margin-top:6px;
+    background:#fde68a;
+    padding:4px 8px;
+    border-radius:8px;
+    font-size:13px;
+}
+
+body.dark #pinnedSection{
+    background:#3f3b57;
+}
+
+body.dark #pinnedTasks .task{
+    border-left:5px solid #c4b5fd;
 }
